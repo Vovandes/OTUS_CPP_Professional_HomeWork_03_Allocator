@@ -6,10 +6,10 @@ namespace vs {
 	template <typename Q, typename _A = std::allocator<Q>>
 	class my_list {
 	public:
-	struct Node {
-		Node* next;
-		Q data;
-	};
+		struct Node {
+			Node* next;
+			Q data;
+		};
 		template <typename Q>
 		class my_list_const_iterator {
 		public:
@@ -71,7 +71,7 @@ namespace vs {
 		my_list(const my_list& object)
 			: m_head(nullptr)
 			, m_tail(nullptr)
-			, m_alloc() 
+			, m_alloc()
 		{
 #ifdef USE_PRETTY
 			std::cout << "LOG: LL COPY ctor..." << std::endl;
@@ -105,7 +105,7 @@ namespace vs {
 		my_list(my_list&& object) noexcept
 			: m_head(object.m_head)
 			, m_tail(object.m_tail)
-			, m_alloc(object.m_alloc) 
+			, m_alloc(object.m_alloc)
 		{
 #ifdef USE_PRETTY
 			std::cout << "LOG: LL MOVE ctor..." << std::endl;
@@ -118,7 +118,7 @@ namespace vs {
 		my_list(my_list<Q, TAlloc>&& object)
 			: m_head(nullptr)
 			, m_tail(nullptr)
-			, m_alloc() 
+			, m_alloc()
 		{
 #ifdef USE_PRETTY
 			std::cout << "LOG: LL MOVE ctor (diff allocs)..." << std::endl;
@@ -160,6 +160,7 @@ namespace vs {
 				m_tail = new_node;
 				m_tail->next = nullptr;
 			}
+			++m_size_container;
 		}
 
 		void clear() {
@@ -168,7 +169,8 @@ namespace vs {
 				auto* p_rm = current;
 				current = current->next;
 				NodeAllocatorTraits::destroy(m_alloc, p_rm);
-				NodeAllocatorTraits::deallocate(m_alloc, p_rm, 1);				
+				NodeAllocatorTraits::deallocate(m_alloc, p_rm, 1);
+				--m_size_container;
 			}
 		}
 
@@ -179,6 +181,9 @@ namespace vs {
 		my_list_const_iterator<Q> cend() noexcept {
 			return my_list_const_iterator<Q>();
 		}
+
+		size_t size() const { return m_size_container; }
+		bool empty() const { return m_size_container == 0 ? true : false; }
 
 	private:
 		Node* m_head;

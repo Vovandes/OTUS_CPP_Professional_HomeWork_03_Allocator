@@ -2,7 +2,7 @@
 #include "my_list.hpp"
 
 int main() {
-	// A Òonstant for 10 elements:
+	// A —Åonstant for 10 elements:
 	// @param NumElem - max size for allocate;
 	const size_t NumElem{ 10 };
 
@@ -10,26 +10,26 @@ int main() {
 
 	try {
 		// Define std::map instance with DEFAULT allocator(std::allocator<>)
-		auto dict = std::map<int, int, std::less<int>, std::allocator<std::pair<const int, int>>>{};
+		auto dict = std::map<size_t, size_t, std::less<size_t>, std::allocator<std::pair<const size_t, size_t>>>{};
 
 		// Insert 10 elements in std::map(allocated with DEFAULT allocator) :
 		// @key - values from 0 to 9
 		// @value - factorial of key value
-		for (auto i = 0; i < NumElem; ++i) {
-			dict.emplace(std::pair<int, int>(i, factorials[i]));
+		for (size_t i = 0; i < NumElem; ++i) {
+			dict.emplace(std::pair<size_t, size_t>(i, factorials[i]));
 		}
 
 		// Define std::map instance with CUSTOM allocator(vs::custom_allocator<>)
 		auto dict_with_custom_allocator 
-			= std::map<int, int, std::less<int>, vs::custom_allocator<std::pair<const int, int>, NumElem>>{};
+			= std::map<size_t, size_t, std::less<size_t>, vs::custom_allocator<std::pair<const size_t, size_t>, NumElem>>{};
 
 		// Insert 10 elements in std::map (allocated with CUSTOM allocator):
 		// @key - values from 0 to 9
 		// @value - factorial of key value
 		//
 		// Implement custom memory allocation for fixed number of map nodes
-		for (auto i = 0; i < NumElem; ++i) {
-			dict_with_custom_allocator.emplace(std::pair<int, int>(i, factorials[i]));
+		for (size_t i = 0; i < NumElem; ++i) {
+			dict_with_custom_allocator.emplace(std::pair<size_t, size_t>(i, factorials[i]));
 		}
 		std::cout << std::endl;
 
@@ -57,6 +57,7 @@ int main() {
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+		std::cout << "Size my container = " << list_custom.size() << std::endl;
 	}
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;

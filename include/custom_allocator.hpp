@@ -37,19 +37,17 @@ namespace vs {
 		~custom_allocator() {}
 
 		template <typename U, size_t capacity_U = capacity>
-		explicit custom_allocator(const custom_allocator<U, capacity_U>& object) noexcept
+		explicit custom_allocator(const custom_allocator<U, capacity_U>&) noexcept
 		{ }
 
 		pointer allocate(size_t n) {
-#ifndef USE_PRETTY
-#else
+#ifdef USE_PRETTY
 			std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
 #endif // !USE_PRETTY
 			if (m_size + n > m_capacity) {
-#ifndef USE_PRETTY
-#else
+#ifdef USE_PRETTY
 				std::cout << "Memore realloc!!!" << std::endl;
-#endif // !USE_PRETTY				
+#endif // !USE_PRETTY			
 				m_capacity = m_capacity * 2;
 				m_pointer = reinterpret_cast<pointer>(std::realloc(m_pointer, m_capacity * sizeof(value_type)));
 			}
@@ -66,8 +64,7 @@ namespace vs {
 		}
 
 		void deallocate(pointer ptr, std::size_t n) {
-#ifndef USE_PRETTY
-#else
+#ifdef USE_PRETTY
 			std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
 #endif // !USE_PRETTY
 			if (!ptr) {
@@ -83,17 +80,14 @@ namespace vs {
 
 //		template<typename U, typename ...Args>
 //		void construct(U* ptr, Args &&...args) {
-//#ifndef USE_PRETTY
-//#else
+//#ifdef USE_PRETTY
 //			std::cout << __PRETTY_FUNCTION__ << std::endl;
 //#endif // !USE_PRETTY
 //			new(ptr) U(std::forward<Args>(args)...);
 //		};
 //
 //		void destroy(Q* ptr) {
-//#ifndef USE_PRETTY
-//			//std::cout << "destroy: " << std::endl;
-//#else
+//#ifdef USE_PRETTY
 //			std::cout << __PRETTY_FUNCTION__ << std::endl;
 //#endif // !USE_PRETTY
 //			ptr->~Q();
@@ -159,5 +153,5 @@ namespace vs {
 }
 
 namespace vs {
-	void PrintContainerMap(std::map<int, int, std::less<int>, vs::custom_allocator<std::pair<const int, int>, 10>>& dict);
+	void PrintContainerMap(std::map<size_t, size_t, std::less<size_t>, vs::custom_allocator<std::pair<const size_t, size_t>, 10>>& dict);
 }
