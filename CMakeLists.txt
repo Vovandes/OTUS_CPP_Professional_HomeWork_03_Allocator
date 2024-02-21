@@ -13,20 +13,20 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 add_executable(my_allocator_cli src/main.cpp)
 
-add_library(my_allocator_lib src/custom_allocator.cpp)
+add_library(my_allocator src/custom_allocator.cpp)
 
 # Add source to the include directories for the test target
-target_include_directories(my_allocator_lib PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+target_include_directories(my_allocator PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
-target_include_directories(my_allocator_lib PRIVATE "${CMAKE_BINARY_DIR}")
+target_include_directories(my_allocator PRIVATE "${CMAKE_BINARY_DIR}")
 
-set_target_properties(my_allocator_cli my_allocator_lib PROPERTIES
+set_target_properties(my_allocator_cli my_allocator PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
 )
 
 target_link_libraries(my_allocator_cli PRIVATE
-    my_allocator_lib
+    my_allocator
 )
 
 # if(WITH_GTEST)
@@ -54,7 +54,7 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -pedantic")
 endif()
 
-install(TARGETS my_allocator_cli RUNTIME DESTINATION bin)
+install(TARGETS my_allocator RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
