@@ -108,13 +108,13 @@ namespace vs {
 }
 
 template <class T, size_t capacity, class U>
-inline constexpr bool operator== (const vs::custom_allocator<T, capacity>& lhs, const vs::custom_allocator<U, capacity>& rhs) noexcept
+inline constexpr bool operator== (const vs::custom_allocator<T, capacity>&, const vs::custom_allocator<U, capacity>&) noexcept
 {
 	return true;
 }
 
 template <class T, size_t capacity, class U>
-inline constexpr bool operator!= (const vs::custom_allocator<T, capacity>& lhs, const vs::custom_allocator<U, capacity>& rhs) noexcept
+inline constexpr bool operator!= (const vs::custom_allocator<T, capacity>&, const vs::custom_allocator<U, capacity>&) noexcept
 {
 	return false;
 }

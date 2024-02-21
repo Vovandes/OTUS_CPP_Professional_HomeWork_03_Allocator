@@ -10,15 +10,15 @@ namespace vs {
 			Node* next;
 			Q data;
 		};
-		template <typename Q>
+		template <typename T>
 		class my_list_const_iterator {
 		public:
-			using value_type = Q;
-			using pointer = const Q*;
-			using reference = const Q&;
+			using value_type = T;
+			using pointer = const T*;
+			using reference = const T&;
 			using iterator_category = std::forward_iterator_tag;
 
-			using _self = my_list_const_iterator<Q>;
+			using _self = my_list_const_iterator<T>;
 			Node* _node;
 
 			my_list_const_iterator() : _node(nullptr) {};
