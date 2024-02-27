@@ -8,9 +8,13 @@
 #include <utility>
 #include <memory>
 
+namespace vs {
+	int version();
+}
+
 //#define USE_PRETTY 1
 
-#define __PRETTY_FUNCTION__  __FUNCSIG__
+// #define __PRETTY_FUNCTION__  __FUNCSIG__
 
 namespace vs {
 	template<typename Q, size_t capacity>
