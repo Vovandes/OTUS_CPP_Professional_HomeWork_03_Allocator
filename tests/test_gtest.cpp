@@ -10,16 +10,16 @@ TEST(Google_test, test_version) {
 }
 
 TEST(Google_test, test_allocation_vector) {
-	auto vector_test = std::vector<int, vs::custom_allocator<int, 10ui64>>(10, 1);
+	size_t constexpr tmp = 10;
+	auto vector_test = std::vector<int, vs::custom_allocator<int, tmp>>(10, 1);
 
-	EXPECT_EQ(vector_test.size(), 10ui64);
+	EXPECT_EQ(vector_test.size(), tmp);
 
-	EXPECT_EQ(vector_test.get_allocator().get_Size(), 10ui64);
-	EXPECT_EQ(vector_test.get_allocator().get_Capacity(), 10ui64);
+	EXPECT_EQ(vector_test.get_allocator().get_Size(), tmp);
+	EXPECT_EQ(vector_test.get_allocator().get_Capacity(), tmp);
 
 	vector_test.emplace_back(1);
-	EXPECT_EQ(vector_test.get_allocator().get_Size(), 11ui64);
-	EXPECT_EQ(vector_test.get_allocator().get_Capacity(), 10ui64 * 2ui64);
+	EXPECT_EQ(vector_test.get_allocator().get_Size(), tmp*2);
 }
 
 TEST(Google_test, test_allocation_map) {
@@ -35,7 +35,7 @@ TEST(Google_test, test_allocation_map) {
 }
 
 TEST(Google_test, test_container_size_and_clear) {
-	auto container_test = vs::my_list<int, vs::custom_allocator<int, 5>>{ 1, 2, 3, 4, 5 };
+	auto container_test = vs::my_list<int>{ 1, 2, 3, 4, 5 };
 
 	EXPECT_EQ(container_test.size(), 5);
 

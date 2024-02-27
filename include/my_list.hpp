@@ -3,14 +3,18 @@
 #include "custom_allocator.hpp"
 
 namespace vs {
+	template<typename Q>
+	struct Node {
+		Node* next;
+		Q data;
+	};
+}
+
+namespace vs {
 	template <typename Q, typename _A = std::allocator<Q>>
 	class my_list {
 	public:
-		struct Node {
-			Node* next;
-			Q data;
-		};
-		template <typename Q>
+		template <typename U>
 		class my_list_const_iterator {
 		public:
 			using value_type = Q;
@@ -18,12 +22,12 @@ namespace vs {
 			using reference = const Q&;
 			using iterator_category = std::forward_iterator_tag;
 
-			using _self = my_list_const_iterator<Q>;
-			Node* _node;
+			using _self = my_list_const_iterator<value_type>;
+			Node<Q>* _node;
 
 			my_list_const_iterator() : _node(nullptr) {};
 
-			my_list_const_iterator(Node* pNode) : _node(pNode) {};
+			my_list_const_iterator(Node<Q>* pNode) : _node(pNode) {};
 
 			reference operator*() const {
 				return _node->data;
@@ -54,7 +58,7 @@ namespace vs {
 
 		using Allocator = typename std::allocator_traits<_A>::template rebind_alloc<Q>;
 		using QAllocatorTraits = std::allocator_traits<Allocator>;
-		using NodeAllocator = typename QAllocatorTraits::template rebind_alloc<Node>;
+		using NodeAllocator = typename QAllocatorTraits::template rebind_alloc<Node<Q>>;
 		using NodeAllocatorTraits = std::allocator_traits<NodeAllocator>;
 
 		my_list()
@@ -68,9 +72,9 @@ namespace vs {
 #endif // !USE_PRETTY			
 		};
 
-		my_list(std::initializer_list<Q> list) {
-			for (const auto&& elem : list) {
-				push_back(std::move(elem));
+		my_list(std::initializer_list<Q> list) : m_size_container{ 0 } {
+			for (const auto& elem : list) {
+				push_back(elem);
 			}
 		}
 
@@ -100,7 +104,7 @@ namespace vs {
 
 		template <typename TAlloc>
 		void copyList(const my_list<Q, TAlloc>& object) {
-			Node* curNode = object.cbegin()._node;
+			Node<Q>* curNode = object.cbegin()._node;
 			while (curNode != nullptr) {
 				this->push_back(curNode->data);
 				curNode = curNode->next;
@@ -169,14 +173,35 @@ namespace vs {
 			++m_size_container;
 		}
 
-		void clear() {
-			auto* current = m_head;
-			while (current != nullptr) {
-				auto* p_rm = current;
+		void pop_back() {
+			if (empty()) {
+				return;
+			}
+
+			Node<Q>* current = m_head;
+			Node<Q>* prev = m_head;
+
+			while (current->next != nullptr) {
+				prev = current;
 				current = current->next;
-				NodeAllocatorTraits::destroy(m_alloc, p_rm);
-				NodeAllocatorTraits::deallocate(m_alloc, p_rm, 1);
-				--m_size_container;
+			}
+
+			m_tail = prev;
+			prev = nullptr;
+
+			NodeAllocatorTraits::destroy(m_alloc, current);
+			NodeAllocatorTraits::deallocate(m_alloc, current, 1);
+
+			--m_size_container;
+
+			m_size_container ? (m_tail->next = nullptr) : (m_head = nullptr, m_tail = nullptr);
+		}
+
+		void clear() {
+			if (!empty()) {
+				while (m_size_container) {
+					pop_back();
+				}
 			}
 		}
 
@@ -192,8 +217,8 @@ namespace vs {
 		bool empty() const { return m_size_container == 0 ? true : false; }
 
 	private:
-		Node* m_head;
-		Node* m_tail;
+		Node<Q>* m_head;
+		Node<Q>* m_tail;
 
 		NodeAllocator m_alloc;
 
