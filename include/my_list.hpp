@@ -72,7 +72,11 @@ namespace vs {
 #endif // !USE_PRETTY			
 		};
 
-		my_list(std::initializer_list<Q> list) : m_size_container{ 0 } {
+		my_list(std::initializer_list<Q> list) 
+			: m_head(nullptr)
+			, m_tail(nullptr)
+			, m_alloc()
+			, m_size_container{ 0 } {
 			for (const auto& elem : list) {
 				push_back(elem);
 			}
@@ -82,6 +86,7 @@ namespace vs {
 			: m_head(nullptr)
 			, m_tail(nullptr)
 			, m_alloc()
+			, m_size_container{ 0 }
 		{
 #ifdef USE_PRETTY
 			std::cout << "LOG: LL COPY ctor..." << std::endl;
@@ -116,6 +121,7 @@ namespace vs {
 			: m_head(object.m_head)
 			, m_tail(object.m_tail)
 			, m_alloc(object.m_alloc)
+			, m_size_container{ object.m_size_container }
 		{
 #ifdef USE_PRETTY
 			std::cout << "LOG: LL MOVE ctor..." << std::endl;
@@ -129,6 +135,7 @@ namespace vs {
 			: m_head(nullptr)
 			, m_tail(nullptr)
 			, m_alloc()
+			, m_size_container{ 0 }
 		{
 #ifdef USE_PRETTY
 			std::cout << "LOG: LL MOVE ctor (diff allocs)..." << std::endl;
@@ -143,6 +150,7 @@ namespace vs {
 					p_dst = p_dst->next;
 					p_object = p_object->next;
 					m_alloc.construct(p_dst, std::move(*p_object));
+					++m_size_container;
 				}
 			}
 		}

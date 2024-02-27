@@ -35,7 +35,7 @@ TEST(Google_test, test_allocation_map) {
 }
 
 TEST(Google_test, test_container_size_and_clear) {
-	auto container_test = vs::my_list<int>{ 1, 2, 3, 4, 5 };
+	auto container_test = vs::my_list<int, vs::custom_allocator<int, 10>>{ 1, 2, 3, 4, 5 };
 
 	EXPECT_EQ(container_test.size(), 5);
 
