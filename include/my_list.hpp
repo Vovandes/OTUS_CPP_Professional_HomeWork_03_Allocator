@@ -10,15 +10,15 @@ namespace vs {
 			Node* next;
 			Q data;
 		};
-		template <typename T>
+		template <typename Q>
 		class my_list_const_iterator {
 		public:
-			using value_type = T;
-			using pointer = const T*;
-			using reference = const T&;
+			using value_type = Q;
+			using pointer = const Q*;
+			using reference = const Q&;
 			using iterator_category = std::forward_iterator_tag;
 
-			using _self = my_list_const_iterator<T>;
+			using _self = my_list_const_iterator<Q>;
 			Node* _node;
 
 			my_list_const_iterator() : _node(nullptr) {};
@@ -67,6 +67,12 @@ namespace vs {
 			std::cout << "LOG: LL ctor..." << std::endl;
 #endif // !USE_PRETTY			
 		};
+
+		my_list(std::initializer_list<Q> list) {
+			for (const auto&& elem : list) {
+				push_back(std::move(elem));
+			}
+		}
 
 		my_list(const my_list& object)
 			: m_head(nullptr)
